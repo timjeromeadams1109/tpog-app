@@ -12,7 +12,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MESSAGES'),
+        title: const Text('Messages'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_comment_outlined),

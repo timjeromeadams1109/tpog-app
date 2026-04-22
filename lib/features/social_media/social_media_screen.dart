@@ -17,7 +17,7 @@ class SocialMediaScreen extends StatelessWidget {
       _Link(Icons.email_outlined, 'Email', 'hello@placeofgrace.church'),
     ];
     return Scaffold(
-      appBar: AppBar(title: const Text('CONNECT')),
+      appBar: AppBar(title: const Text('Connect')),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: links.length,

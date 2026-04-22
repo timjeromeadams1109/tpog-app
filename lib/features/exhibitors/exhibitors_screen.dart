@@ -10,7 +10,7 @@ class ExhibitorsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('LOCAL PARTNERS')),
+      appBar: AppBar(title: const Text('Local partners')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

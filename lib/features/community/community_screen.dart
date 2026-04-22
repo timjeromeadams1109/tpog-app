@@ -19,7 +19,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('COMMUNITY')),
+      appBar: AppBar(title: const Text('Community')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openComposer,
         backgroundColor: AppColors.tpogBlue,

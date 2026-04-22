@@ -21,7 +21,7 @@ class _DonateScreenState extends State<DonateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('GIVE')),
+      appBar: AppBar(title: const Text('Give')),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [

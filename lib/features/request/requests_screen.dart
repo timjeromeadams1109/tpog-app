@@ -29,7 +29,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('PRAYER REQUESTS')),
+      appBar: AppBar(title: const Text('Prayer requests')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openNewRequest,
         backgroundColor: AppColors.tpogBlue,

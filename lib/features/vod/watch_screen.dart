@@ -16,7 +16,7 @@ class WatchScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('WATCH'),
+        title: const Text('Watch'),
         actions: [
           IconButton(icon: const Icon(Icons.live_tv_outlined), onPressed: () {}),
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),

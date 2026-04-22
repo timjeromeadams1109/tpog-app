@@ -9,8 +9,8 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Color(0xFF0A0A0A),
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
     ),
   );
   runApp(const TpogApp());
@@ -24,7 +24,7 @@ class TpogApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'The Place of Grace',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark(),
+      theme: AppTheme.light(),
       routerConfig: appRouter,
     );
   }

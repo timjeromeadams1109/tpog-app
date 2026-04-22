@@ -20,7 +20,7 @@ class _MembersScreenState extends State<MembersScreen> {
         .where((u) => u.name.toLowerCase().contains(_q.toLowerCase()))
         .toList();
     return Scaffold(
-      appBar: AppBar(title: const Text('MEMBERS')),
+      appBar: AppBar(title: const Text('Members')),
       body: Column(
         children: [
           Padding(

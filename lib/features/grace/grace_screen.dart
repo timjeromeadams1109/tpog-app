@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../theme/app_colors.dart';
 
@@ -91,41 +90,30 @@ class _GraceScreenState extends State<GraceScreen> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.tpogBlue, AppColors.tpogBlueLight],
-                ),
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.tpogBlue.withValues(alpha: 0.5),
-                    blurRadius: 12,
-                  ),
-                ],
               ),
               child:
                   const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
             ),
             const SizedBox(width: 12),
-            Column(
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'GRACE',
-                  style: GoogleFonts.cinzel(
-                    fontSize: 16,
+                  'Grace',
+                  style: TextStyle(
+                    fontSize: 17,
                     fontWeight: FontWeight.w700,
-                    letterSpacing: 2,
                     color: AppColors.textPrimary,
                   ),
                 ),
-                const Text(
+                Text(
                   'AI companion • Always here',
                   style: TextStyle(
                     fontSize: 11,
-                    color: AppColors.tpogBlueLight,
+                    color: AppColors.primary,
                   ),
                 ),
               ],

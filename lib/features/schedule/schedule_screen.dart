@@ -17,7 +17,7 @@ class ScheduleScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('MY SCHEDULE')),
+      appBar: AppBar(title: const Text('My schedule')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

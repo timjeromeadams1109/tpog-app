@@ -12,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
     final me = MockData.me;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PROFILE'),
+        title: const Text('Profile'),
         actions: [
           IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () {}),
         ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../theme/app_colors.dart';
 
@@ -12,11 +11,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _email = TextEditingController(text: 'demo@placeofgrace.church');
+  final _password = TextEditingController(text: 'demo');
   bool _loading = false;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   void _signIn() async {
     setState(() => _loading = true);
-    await Future.delayed(const Duration(milliseconds: 900));
+    await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     context.go('/home');
   }
@@ -32,40 +40,60 @@ class _LoginScreenState extends State<LoginScreen> {
               shrinkWrap: true,
               padding: const EdgeInsets.all(24),
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.info_outline,
+                          color: AppColors.primary, size: 16),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Demo mode — tap Sign in to enter. '
+                          'Any credentials work.',
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
                 Center(
                   child: Container(
                     width: 72,
                     height: 72,
                     decoration: BoxDecoration(
-                      color: AppColors.tpogBlue,
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.tpogBlue.withValues(alpha: 0.4),
-                          blurRadius: 20,
-                        ),
-                      ],
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     alignment: Alignment.center,
-                    child: Text(
+                    child: const Text(
                       'G',
-                      style: GoogleFonts.cinzel(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 36,
+                        fontSize: 34,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                Center(
+                const SizedBox(height: 20),
+                const Center(
                   child: Text(
-                    'THE PLACE OF GRACE',
-                    style: GoogleFonts.cinzel(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 3,
+                    'The Place of Grace',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -79,17 +107,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
-                const TextField(
-                  decoration: InputDecoration(
+                const SizedBox(height: 32),
+                TextField(
+                  controller: _email,
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email_outlined),
                   ),
                 ),
                 const SizedBox(height: 14),
-                const TextField(
+                TextField(
+                  controller: _password,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  onSubmitted: (_) => _signIn(),
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                     prefixIcon: Icon(Icons.lock_outline),
                   ),
@@ -119,12 +150,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         : const Text('Sign in'),
                   ),
                 ),
-                const SizedBox(height: 24),
-                Row(
+                const SizedBox(height: 12),
+                Center(
+                  child: TextButton(
+                    onPressed: () => context.go('/home'),
+                    child: const Text('Skip → enter as demo user'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Row(
                   children: [
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: AppColors.border)),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
                         'OR',
                         style: TextStyle(
@@ -134,10 +172,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: AppColors.border)),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

@@ -25,7 +25,7 @@ class _MediaScreenState extends State<MediaScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MEDIA'),
+        title: const Text('Media'),
         bottom: TabBar(
           controller: _tabs,
           labelColor: AppColors.tpogBlue,

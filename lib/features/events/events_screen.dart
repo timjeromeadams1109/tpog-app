@@ -40,7 +40,7 @@ class _EventsScreenState extends State<EventsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EVENTS'),
+        title: const Text('Events'),
         bottom: TabBar(
           controller: _tabs,
           labelColor: AppColors.tpogBlue,

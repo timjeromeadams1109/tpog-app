@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/mock/mock_data.dart';
@@ -23,35 +22,34 @@ class HomeScreen extends StatelessWidget {
             SliverAppBar(
               pinned: false,
               floating: true,
-              backgroundColor: AppColors.tpogDark,
+              backgroundColor: AppColors.surface,
               surfaceTintColor: Colors.transparent,
               title: Row(
                 children: [
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: 34,
+                    height: 34,
                     decoration: BoxDecoration(
-                      color: AppColors.tpogBlue,
-                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     alignment: Alignment.center,
-                    child: Text(
+                    child: const Text(
                       'G',
-                      style: GoogleFonts.cinzel(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'THE PLACE OF GRACE',
-                    style: GoogleFonts.cinzel(
+                  const SizedBox(width: 10),
+                  const Text(
+                    'The Place of Grace',
+                    style: TextStyle(
                       color: AppColors.textPrimary,
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 2,
                     ),
                   ),
                 ],
@@ -122,19 +120,18 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(
-              'WELCOME HOME',
-              style: GoogleFonts.cinzel(
+            const Text(
+              'Welcome home',
+              style: TextStyle(
                 color: Colors.white70,
-                fontSize: 12,
-                letterSpacing: 3,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'There is therefore now\nno condemnation.',
-              style: GoogleFonts.cinzel(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 22,
                 fontWeight: FontWeight.w600,

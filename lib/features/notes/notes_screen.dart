@@ -10,7 +10,7 @@ class NotesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('NOTES')),
+      appBar: AppBar(title: const Text('Notes')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openEditor(context),
         backgroundColor: AppColors.tpogBlue,
@@ -93,7 +93,7 @@ class NotesScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) => Scaffold(
           appBar: AppBar(
-            title: const Text('NOTE'),
+            title: const Text('Note'),
             actions: [
               IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () {}),
               IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}),

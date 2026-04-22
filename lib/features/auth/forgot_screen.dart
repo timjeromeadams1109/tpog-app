@@ -7,7 +7,7 @@ class ForgotScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('RESET PASSWORD')),
+      appBar: AppBar(title: const Text('Reset password')),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

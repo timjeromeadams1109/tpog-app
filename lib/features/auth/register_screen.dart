@@ -7,7 +7,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('CREATE ACCOUNT')),
+      appBar: AppBar(title: const Text('Create account')),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
