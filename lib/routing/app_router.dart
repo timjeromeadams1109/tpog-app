@@ -29,6 +29,10 @@ final GoRouter appRouter = GoRouter(
   initialLocation: '/auth/login',
   routes: [
     GoRoute(
+      path: '/',
+      redirect: (_, __) => '/auth/login',
+    ),
+    GoRoute(
       path: '/auth/login',
       builder: (_, __) => const LoginScreen(),
     ),
