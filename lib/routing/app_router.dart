@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/forgot_screen.dart';
@@ -23,8 +22,6 @@ import '../features/shell/app_shell.dart';
 import '../features/social_media/social_media_screen.dart';
 import '../features/vod/watch_screen.dart';
 
-final _shellKey = GlobalKey<NavigatorState>();
-
 final GoRouter appRouter = GoRouter(
   initialLocation: '/auth/login',
   routes: [
@@ -45,7 +42,6 @@ final GoRouter appRouter = GoRouter(
       builder: (_, __) => const ForgotScreen(),
     ),
     StatefulShellRoute.indexedStack(
-      parentNavigatorKey: _shellKey,
       builder: (_, __, shell) => AppShell(shell: shell),
       branches: [
         StatefulShellBranch(
