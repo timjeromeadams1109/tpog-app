@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/content_service.dart';
 import '../../shared/widgets/time_ago.dart';
 import '../../theme/app_colors.dart';
 
@@ -11,6 +12,7 @@ class RequestsScreen extends StatefulWidget {
 }
 
 class _RequestsScreenState extends State<RequestsScreen> {
+  static final _cms = ContentService.instance;
   final _requests = <_Req>[
     _Req('Sarah Mitchell',
         'Praying for wisdom as we look for a new home for my mother. The stress has been heavy.',
@@ -29,7 +31,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Prayer requests')),
+      appBar: AppBar(title: Text(_cms.get('prayer', 'header.title', fallback: 'Prayer requests'))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openNewRequest,
         backgroundColor: AppColors.tpogBlue,
@@ -90,7 +92,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       const Spacer(),
                       OutlinedButton.icon(
                         icon: const Icon(Icons.handshake_outlined, size: 16),
-                        label: const Text('Pray'),
+                        label: Text(_cms.get('prayer', 'pray.label', fallback: 'Pray')),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: AppColors.border),
                           foregroundColor: AppColors.tpogBlueLight,
@@ -99,8 +101,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         onPressed: () {
                           setState(() => r.prayers += 1);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Added to your prayer list'),
+                            SnackBar(
+                              content: Text(_cms.get('prayer', 'snackbar.pray', fallback: 'Added to your prayer list')),
                             ),
                           );
                         },
@@ -135,26 +137,26 @@ class _RequestsScreenState extends State<RequestsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'Prayer request',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            Text(
+              _cms.get('prayer', 'form.title', fallback: 'Prayer request'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
-            const TextField(
+            TextField(
               maxLines: 4,
               decoration: InputDecoration(
-                hintText: 'How can we pray for you?',
+                hintText: _cms.get('prayer', 'form.hint', fallback: 'How can we pray for you?'),
               ),
             ),
             const SizedBox(height: 12),
             Row(
-              children: const [
-                Icon(Icons.visibility_off_outlined,
+              children: [
+                const Icon(Icons.visibility_off_outlined,
                     size: 16, color: AppColors.textSecondary),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
-                  'Post anonymously',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                  _cms.get('prayer', 'anonymous.label', fallback: 'Post anonymously'),
+                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
                 ),
                 Spacer(),
                 Switch(value: false, onChanged: null),
@@ -165,11 +167,11 @@ class _RequestsScreenState extends State<RequestsScreen> {
               onPressed: () {
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Shared with the prayer team')),
+                  SnackBar(
+                      content: Text(_cms.get('prayer', 'snackbar.submit', fallback: 'Shared with the prayer team'))),
                 );
               },
-              child: const Text('Submit request'),
+              child: Text(_cms.get('prayer', 'submit.label', fallback: 'Submit request')),
             ),
           ],
         ),

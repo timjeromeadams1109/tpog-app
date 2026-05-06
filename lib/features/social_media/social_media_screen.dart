@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class SocialMediaScreen extends StatelessWidget {
   const SocialMediaScreen({super.key});
+
+  static final _cms = ContentService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class SocialMediaScreen extends StatelessWidget {
       _Link(Icons.email_outlined, 'Email', 'hello@placeofgrace.church'),
     ];
     return Scaffold(
-      appBar: AppBar(title: const Text('Connect')),
+      appBar: AppBar(title: Text(_cms.get('social', 'header.title', fallback: 'Connect'))),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: links.length,

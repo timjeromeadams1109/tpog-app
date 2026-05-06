@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../shared/widgets/avatar.dart';
 import '../../theme/app_colors.dart';
 
@@ -12,39 +13,30 @@ class MoreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final me = MockData.me;
 
+    final cms = ContentService.instance;
     final sections = <_MoreSection>[
-      _MoreSection('LIFE AT TPOG', [
-        _MoreItem(Icons.note_alt_outlined, 'Notes', () => context.go('/notes')),
-        _MoreItem(Icons.ondemand_video_outlined, 'Watch',
-            () => context.go('/watch')),
-        _MoreItem(Icons.photo_library_outlined, 'Media gallery',
-            () => context.go('/media')),
-        _MoreItem(Icons.calendar_month_outlined, 'My schedule',
-            () => context.go('/schedule')),
+      _MoreSection(cms.get('more', 'section.life', fallback: 'LIFE AT TPOG'), [
+        _MoreItem(Icons.note_alt_outlined,        cms.get('more', 'item.notes',     fallback: 'Notes'),             () => context.go('/notes')),
+        _MoreItem(Icons.ondemand_video_outlined,  cms.get('more', 'item.watch',     fallback: 'Watch'),             () => context.go('/watch')),
+        _MoreItem(Icons.photo_library_outlined,   cms.get('more', 'item.media',     fallback: 'Media gallery'),     () => context.go('/media')),
+        _MoreItem(Icons.calendar_month_outlined,  cms.get('more', 'item.schedule',  fallback: 'My schedule'),       () => context.go('/schedule')),
       ]),
-      _MoreSection('CONNECT', [
-        _MoreItem(Icons.people_outline, 'Members directory',
-            () => context.go('/members')),
-        _MoreItem(Icons.volunteer_activism_outlined, 'Give',
-            () => context.go('/donate')),
-        _MoreItem(Icons.handshake_outlined, 'Prayer requests',
-            () => context.go('/requests')),
-        _MoreItem(Icons.storefront_outlined, 'Local partners',
-            () => context.go('/exhibitors')),
+      _MoreSection(cms.get('more', 'section.connect', fallback: 'CONNECT'), [
+        _MoreItem(Icons.people_outline,           cms.get('more', 'item.members',   fallback: 'Members directory'), () => context.go('/members')),
+        _MoreItem(Icons.volunteer_activism_outlined, cms.get('more', 'item.give',   fallback: 'Give'),              () => context.go('/donate')),
+        _MoreItem(Icons.handshake_outlined,       cms.get('more', 'item.prayer',    fallback: 'Prayer requests'),   () => context.go('/requests')),
+        _MoreItem(Icons.storefront_outlined,      cms.get('more', 'item.partners',  fallback: 'Local partners'),    () => context.go('/exhibitors')),
       ]),
-      _MoreSection('ACCOUNT', [
-        _MoreItem(Icons.person_outline, 'Profile',
-            () => context.go('/profile')),
-        _MoreItem(Icons.settings_outlined, 'Settings',
-            () => context.go('/settings')),
-        _MoreItem(Icons.share_outlined, 'Social & website',
-            () => context.go('/social')),
-        _MoreItem(Icons.logout, 'Sign out', () => context.go('/auth/login')),
+      _MoreSection(cms.get('more', 'section.account', fallback: 'ACCOUNT'), [
+        _MoreItem(Icons.person_outline,           cms.get('more', 'item.profile',   fallback: 'Profile'),           () => context.go('/profile')),
+        _MoreItem(Icons.settings_outlined,        cms.get('more', 'item.settings',  fallback: 'Settings'),          () => context.go('/settings')),
+        _MoreItem(Icons.share_outlined,           cms.get('more', 'item.social',    fallback: 'Social & website'),  () => context.go('/social')),
+        _MoreItem(Icons.logout,                   cms.get('more', 'item.signout',   fallback: 'Sign out'),          () => context.go('/auth/login')),
       ]),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('More')),
+      appBar: AppBar(title: Text(ContentService.instance.get('more', 'header.title', fallback: 'More'))),
       body: ListView(
         children: [
           InkWell(
@@ -108,9 +100,9 @@ class MoreScreen extends StatelessWidget {
             const Divider(height: 1),
           ],
           const SizedBox(height: 40),
-          const Center(
+          Center(
             child: Text(
-              'v1.0.0 • The Place of Grace',
+              'v1.0.0 • ${ContentService.instance.get('more', 'footer', fallback: 'The Place of Grace')}',
               style: TextStyle(color: AppColors.textTertiary, fontSize: 11),
             ),
           ),

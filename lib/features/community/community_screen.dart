@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../shared/widgets/avatar.dart';
 import '../../shared/widgets/time_ago.dart';
 import '../../theme/app_colors.dart';
@@ -14,18 +15,19 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
+  static final _cms = ContentService.instance;
   late final List<MockPost> _posts = List.of(MockData.posts);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Community')),
+      appBar: AppBar(title: Text(_cms.get('community', 'header.title', fallback: 'Community'))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openComposer,
         backgroundColor: AppColors.tpogBlue,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.edit_outlined),
-        label: const Text('Post'),
+        label: Text(_cms.get('community', 'fab.label', fallback: 'Post')),
       ),
       body: RefreshIndicator(
         onRefresh: () async => Future.delayed(const Duration(milliseconds: 600)),
@@ -119,7 +121,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 ),
                 _action(
                   icon: Icons.share_outlined,
-                  label: 'Share',
+                  label: _cms.get('community', 'action.share', fallback: 'Share'),
                   onTap: () {},
                 ),
               ],
@@ -180,15 +182,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'New post',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            Text(
+              _cms.get('community', 'composer.title', fallback: 'New post'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
             TextField(
               maxLines: 5,
-              decoration: const InputDecoration(
-                hintText: 'Share with the community…',
+              decoration: InputDecoration(
+                hintText: _cms.get('community', 'composer.hint', fallback: 'Share with the community…'),
               ),
             ),
             const SizedBox(height: 16),
@@ -209,10 +211,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   onPressed: () {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Posted to the community')),
+                      SnackBar(content: Text(_cms.get('community', 'snackbar.post', fallback: 'Posted to the community'))),
                     );
                   },
-                  child: const Text('Post'),
+                  child: Text(_cms.get('community', 'composer.submit', fallback: 'Post')),
                 ),
               ],
             ),
@@ -246,11 +248,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(16),
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: Text(
-                'Comments',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                _cms.get('community', 'comments.title', fallback: 'Comments'),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
             const Divider(height: 1),
@@ -331,10 +333,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: 'Add a comment…',
+                        hintText: _cms.get('community', 'comment.hint', fallback: 'Add a comment…'),
                         isDense: true,
                       ),
                     ),

@@ -4,11 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../shared/widgets/section_header.dart';
 import '../../theme/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  static final _cms = ContentService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +47,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Text(
-                    'The Place of Grace',
-                    style: TextStyle(
+                  Text(
+                    _cms.get('home', 'header.title',
+                        fallback: 'The Place of Grace'),
+                    style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

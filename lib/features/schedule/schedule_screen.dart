@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});
+
+  static final _cms = ContentService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +20,15 @@ class ScheduleScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My schedule')),
+      appBar: AppBar(title: Text(_cms.get('schedule', 'header.title', fallback: 'My schedule'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           if (mine.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
               child: Text(
-                'GOING',
+                _cms.get('schedule', 'section.going', fallback: 'GOING'),
                 style: TextStyle(
                   fontSize: 11,
                   letterSpacing: 1.5,
@@ -37,10 +40,10 @@ class ScheduleScreen extends StatelessWidget {
             for (final e in mine) _rsvpRow(e, true),
             const SizedBox(height: 20),
           ],
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
             child: Text(
-              'UPCOMING',
+              _cms.get('schedule', 'section.upcoming', fallback: 'UPCOMING'),
               style: TextStyle(
                 fontSize: 11,
                 letterSpacing: 1.5,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  static final _cms = ContentService.instance;
   bool _pushAll = true;
   bool _pushEvents = true;
   bool _pushMessages = true;
@@ -19,16 +21,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(_cms.get('settings', 'header.title', fallback: 'Settings'))),
       body: ListView(
         children: [
-          _sectionTitle('NOTIFICATIONS'),
+          _sectionTitle(_cms.get('settings', 'section.notifications', fallback: 'NOTIFICATIONS')),
           SwitchListTile(
             value: _pushAll,
             activeColor: AppColors.tpogBlue,
             onChanged: (v) => setState(() => _pushAll = v),
-            title: const Text('Push notifications'),
-            subtitle: const Text('Receive all app notifications'),
+            title: Text(_cms.get('settings', 'notif.all.title', fallback: 'Push notifications')),
+            subtitle: Text(_cms.get('settings', 'notif.all.subtitle', fallback: 'Receive all app notifications')),
           ),
           SwitchListTile(
             value: _pushEvents && _pushAll,
@@ -36,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onChanged: _pushAll
                 ? (v) => setState(() => _pushEvents = v)
                 : null,
-            title: const Text('Events & services'),
+            title: Text(_cms.get('settings', 'notif.events.title', fallback: 'Events & services')),
           ),
           SwitchListTile(
             value: _pushMessages && _pushAll,
@@ -44,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onChanged: _pushAll
                 ? (v) => setState(() => _pushMessages = v)
                 : null,
-            title: const Text('Messages'),
+            title: Text(_cms.get('settings', 'notif.messages.title', fallback: 'Messages')),
           ),
           SwitchListTile(
             value: _pushCommunity && _pushAll,
@@ -52,41 +54,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onChanged: _pushAll
                 ? (v) => setState(() => _pushCommunity = v)
                 : null,
-            title: const Text('Community posts'),
+            title: Text(_cms.get('settings', 'notif.community.title', fallback: 'Community posts')),
           ),
-          _sectionTitle('APPEARANCE'),
+          _sectionTitle(_cms.get('settings', 'section.appearance', fallback: 'APPEARANCE')),
           SwitchListTile(
             value: _darkMode,
             activeColor: AppColors.tpogBlue,
             onChanged: (v) => setState(() => _darkMode = v),
-            title: const Text('Dark mode'),
+            title: Text(_cms.get('settings', 'appearance.dark.title', fallback: 'Dark mode')),
           ),
-          _sectionTitle('ACCOUNT'),
+          _sectionTitle(_cms.get('settings', 'section.account', fallback: 'ACCOUNT')),
           ListTile(
             leading: const Icon(Icons.lock_outline),
-            title: const Text('Change password'),
+            title: Text(_cms.get('settings', 'account.password', fallback: 'Change password')),
             trailing:
                 const Icon(Icons.chevron_right, color: AppColors.textTertiary),
             onTap: () {},
           ),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
-            title: const Text('Privacy'),
+            title: Text(_cms.get('settings', 'account.privacy', fallback: 'Privacy')),
             trailing:
                 const Icon(Icons.chevron_right, color: AppColors.textTertiary),
             onTap: () {},
           ),
           ListTile(
             leading: const Icon(Icons.help_outline),
-            title: const Text('Help & support'),
+            title: Text(_cms.get('settings', 'account.help', fallback: 'Help & support')),
             trailing:
                 const Icon(Icons.chevron_right, color: AppColors.textTertiary),
             onTap: () {},
           ),
           ListTile(
             leading: const Icon(Icons.logout, color: AppColors.danger),
-            title: const Text('Sign out',
-                style: TextStyle(color: AppColors.danger)),
+            title: Text(
+                _cms.get('settings', 'account.signout', fallback: 'Sign out'),
+                style: const TextStyle(color: AppColors.danger)),
             onTap: () {},
           ),
           const SizedBox(height: 40),

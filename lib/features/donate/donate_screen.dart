@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class DonateScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class DonateScreen extends StatefulWidget {
 }
 
 class _DonateScreenState extends State<DonateScreen> {
+  static final _cms = ContentService.instance;
   double _amount = 50;
   String _fund = 'General';
   String _frequency = 'One time';
@@ -21,7 +23,7 @@ class _DonateScreenState extends State<DonateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Give')),
+      appBar: AppBar(title: Text(_cms.get('give', 'header.title', fallback: 'Give'))),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -30,8 +32,8 @@ class _DonateScreenState extends State<DonateScreen> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  const Text(
-                    'Thank you for your generosity.',
+                  Text(
+                    _cms.get('give', 'hero.tagline', fallback: 'Thank you for your generosity.'),
                     style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 13,
@@ -59,9 +61,9 @@ class _DonateScreenState extends State<DonateScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Amount',
-            style: TextStyle(fontSize: 11, letterSpacing: 1.5,
+          Text(
+            _cms.get('give', 'section.amount', fallback: 'Amount'),
+            style: const TextStyle(fontSize: 11, letterSpacing: 1.5,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textTertiary),
           ),
@@ -86,7 +88,7 @@ class _DonateScreenState extends State<DonateScreen> {
                   ),
                 ),
               ActionChip(
-                label: const Text('Custom'),
+                label: Text(_cms.get('give', 'custom.label', fallback: 'Custom')),
                 onPressed: _customAmount,
                 backgroundColor: AppColors.surface,
                 side: const BorderSide(color: AppColors.border),
@@ -95,9 +97,9 @@ class _DonateScreenState extends State<DonateScreen> {
             ],
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Fund',
-            style: TextStyle(fontSize: 11, letterSpacing: 1.5,
+          Text(
+            _cms.get('give', 'section.fund', fallback: 'Fund'),
+            style: const TextStyle(fontSize: 11, letterSpacing: 1.5,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textTertiary),
           ),
@@ -120,9 +122,9 @@ class _DonateScreenState extends State<DonateScreen> {
             ],
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Frequency',
-            style: TextStyle(fontSize: 11, letterSpacing: 1.5,
+          Text(
+            _cms.get('give', 'section.frequency', fallback: 'Frequency'),
+            style: const TextStyle(fontSize: 11, letterSpacing: 1.5,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textTertiary),
           ),
@@ -162,15 +164,15 @@ class _DonateScreenState extends State<DonateScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          const Center(
+          Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.lock_outline,
+                const Icon(Icons.lock_outline,
                     size: 12, color: AppColors.textTertiary),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
-                  'Secured by Stripe',
+                  _cms.get('give', 'secure.label', fallback: 'Secured by Stripe'),
                   style: TextStyle(
                     color: AppColors.textTertiary,
                     fontSize: 11,
@@ -190,7 +192,7 @@ class _DonateScreenState extends State<DonateScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Custom amount'),
+        title: Text(_cms.get('give', 'dialog.custom.title', fallback: 'Custom amount')),
         content: TextField(
           controller: controller,
           autofocus: true,
@@ -222,7 +224,7 @@ class _DonateScreenState extends State<DonateScreen> {
         backgroundColor: AppColors.surface,
         icon: const Icon(Icons.check_circle,
             color: AppColors.success, size: 48),
-        title: const Text('Thank you'),
+        title: Text(_cms.get('give', 'success.title', fallback: 'Thank you')),
         content: Text(
           'Your gift of \$${_amount.toStringAsFixed(0)} to the $_fund fund has been received.',
           textAlign: TextAlign.center,
