@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class WatchScreen extends StatelessWidget {
   const WatchScreen({super.key});
+
+  static final _cms = ContentService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class WatchScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Watch'),
+        title: Text(_cms.get('vod', 'header.title', fallback: 'Watch')),
         actions: [
           IconButton(icon: const Icon(Icons.live_tv_outlined), onPressed: () {}),
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
@@ -39,9 +42,9 @@ class WatchScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text(
-                  'LIVE Sunday 10:00 AM',
-                  style: TextStyle(
+                Text(
+                  _cms.get('vod', 'live.label', fallback: 'LIVE Sunday 10:00 AM'),
+                  style: const TextStyle(
                     color: AppColors.danger,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
@@ -51,10 +54,10 @@ class WatchScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
             child: Text(
-              'RECENT SERMONS',
+              _cms.get('vod', 'section.recent', fallback: 'RECENT SERMONS'),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,

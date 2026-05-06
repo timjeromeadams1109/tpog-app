@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class EventsScreen extends StatefulWidget {
 
 class _EventsScreenState extends State<EventsScreen>
     with SingleTickerProviderStateMixin {
+  static final _cms = ContentService.instance;
   late final TabController _tabs = TabController(length: 2, vsync: this);
   DateTime _focused = DateTime.now();
   DateTime? _selected;
@@ -40,15 +42,15 @@ class _EventsScreenState extends State<EventsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Events'),
+        title: Text(_cms.get('events', 'header.title', fallback: 'Events')),
         bottom: TabBar(
           controller: _tabs,
           labelColor: AppColors.tpogBlue,
           unselectedLabelColor: AppColors.textSecondary,
           indicatorColor: AppColors.tpogBlue,
-          tabs: const [
-            Tab(text: 'Upcoming'),
-            Tab(text: 'Calendar'),
+          tabs: [
+            Tab(text: _cms.get('events', 'tab.upcoming', fallback: 'Upcoming')),
+            Tab(text: _cms.get('events', 'tab.calendar', fallback: 'Calendar')),
           ],
         ),
       ),
@@ -132,10 +134,10 @@ class _EventsScreenState extends State<EventsScreen>
         ),
         Expanded(
           child: selectedList.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
-                    'No events this day',
-                    style: TextStyle(color: AppColors.textTertiary),
+                    _cms.get('events', 'empty.calendar', fallback: 'No events this day'),
+                    style: const TextStyle(color: AppColors.textTertiary),
                   ),
                 )
               : ListView.separated(
@@ -189,9 +191,9 @@ class _EventsScreenState extends State<EventsScreen>
                             color: AppColors.success.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: const Text(
-                            'Going',
-                            style: TextStyle(
+                          child: Text(
+                            _cms.get('events', 'rsvp.going', fallback: 'Going'),
+                            style: const TextStyle(
                               color: AppColors.success,
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -344,7 +346,9 @@ class _EventsScreenState extends State<EventsScreen>
                         icon: Icon(event.rsvpd
                             ? Icons.check_circle
                             : Icons.add_circle_outline),
-                        label: Text(event.rsvpd ? 'Going' : 'RSVP'),
+                        label: Text(event.rsvpd
+                            ? _cms.get('events', 'rsvp.going', fallback: 'Going')
+                            : _cms.get('events', 'rsvp.add', fallback: 'RSVP')),
                         onPressed: () {
                           setSheetState(() => event.rsvpd = !event.rsvpd);
                           setState(() {});
@@ -356,7 +360,7 @@ class _EventsScreenState extends State<EventsScreen>
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         icon: const Icon(Icons.share_outlined),
-                        label: const Text('Share'),
+                        label: Text(_cms.get('events', 'share.label', fallback: 'Share')),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: AppColors.border),
                           foregroundColor: AppColors.textPrimary,

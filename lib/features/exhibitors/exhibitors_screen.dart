@@ -2,22 +2,25 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class ExhibitorsScreen extends StatelessWidget {
   const ExhibitorsScreen({super.key});
 
+  static final _cms = ContentService.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Local partners')),
+      appBar: AppBar(title: Text(_cms.get('exhibitors', 'header.title', fallback: 'Local partners'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Padding(
-            padding: EdgeInsets.only(bottom: 16),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
             child: Text(
-              'Local businesses that support The Place of Grace. Tap to learn more.',
+              _cms.get('exhibitors', 'intro', fallback: 'Local businesses that support The Place of Grace. Tap to learn more.'),
               style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
             ),
           ),

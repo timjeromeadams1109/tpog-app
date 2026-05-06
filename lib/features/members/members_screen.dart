@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../shared/widgets/avatar.dart';
 import '../../theme/app_colors.dart';
 
@@ -12,6 +13,7 @@ class MembersScreen extends StatefulWidget {
 }
 
 class _MembersScreenState extends State<MembersScreen> {
+  static final _cms = ContentService.instance;
   String _q = '';
 
   @override
@@ -20,14 +22,14 @@ class _MembersScreenState extends State<MembersScreen> {
         .where((u) => u.name.toLowerCase().contains(_q.toLowerCase()))
         .toList();
     return Scaffold(
-      appBar: AppBar(title: const Text('Members')),
+      appBar: AppBar(title: Text(_cms.get('members', 'header.title', fallback: 'Members'))),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
             child: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search members',
+              decoration: InputDecoration(
+                hintText: _cms.get('members', 'search.hint', fallback: 'Search members'),
                 prefixIcon: Icon(Icons.search),
                 isDense: true,
               ),

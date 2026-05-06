@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../shared/widgets/avatar.dart';
 import '../../theme/app_colors.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  static final _cms = ContentService.instance;
+
   @override
   Widget build(BuildContext context) {
     final me = MockData.me;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(_cms.get('profile', 'header.title', fallback: 'Profile')),
         actions: [
           IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () {}),
         ],
@@ -55,10 +58,10 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
             child: Text(
-              'MINISTRIES',
+              _cms.get('profile', 'section.ministries', fallback: 'MINISTRIES'),
               style: TextStyle(
                 fontSize: 11,
                 letterSpacing: 1.5,

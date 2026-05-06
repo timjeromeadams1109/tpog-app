@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/mock/mock_data.dart';
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class NotesScreen extends StatelessWidget {
   const NotesScreen({super.key});
 
+  static final _cms = ContentService.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Notes')),
+      appBar: AppBar(title: Text(_cms.get('notes', 'header.title', fallback: 'Notes'))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openEditor(context),
         backgroundColor: AppColors.tpogBlue,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
-        label: const Text('New note'),
+        label: Text(_cms.get('notes', 'fab.label', fallback: 'New note')),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
@@ -156,28 +159,28 @@ class NotesScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'New note',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            Text(
+              _cms.get('notes', 'editor.title', fallback: 'New note'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
-            const TextField(
-              decoration: InputDecoration(hintText: 'Title'),
+            TextField(
+              decoration: InputDecoration(hintText: _cms.get('notes', 'editor.title_hint', fallback: 'Title')),
             ),
             const SizedBox(height: 12),
-            const TextField(
+            TextField(
               maxLines: 6,
-              decoration: InputDecoration(hintText: 'Start typing…'),
+              decoration: InputDecoration(hintText: _cms.get('notes', 'editor.body_hint', fallback: 'Start typing…')),
             ),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () {
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Note saved')),
+                  SnackBar(content: Text(_cms.get('notes', 'snackbar.saved', fallback: 'Note saved'))),
                 );
               },
-              child: const Text('Save note'),
+              child: Text(_cms.get('notes', 'editor.submit', fallback: 'Save note')),
             ),
           ],
         ),
