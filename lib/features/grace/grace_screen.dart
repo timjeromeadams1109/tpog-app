@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
 class GraceScreen extends StatefulWidget {
@@ -10,21 +11,27 @@ class GraceScreen extends StatefulWidget {
 }
 
 class _GraceScreenState extends State<GraceScreen> {
+  static final _cms = ContentService.instance;
+
   final _controller = TextEditingController();
   final _scrollCtrl = ScrollController();
-  final List<_GraceMessage> _messages = [
-    const _GraceMessage(
+
+  List<_GraceMessage> get _initialMessages => [
+    _GraceMessage(
       fromUser: false,
-      body:
-          "Hi — I'm Grace, The Place of Grace's AI companion.\n\nI can help with scripture questions, find a sermon, summarize a passage, point you to a small group, or just listen. What's on your heart today?",
+      body: _cms.get('chat', 'welcome',
+          fallback:
+              "Hi — I'm Grace, The Place of Grace's AI companion.\n\nI can help with scripture questions, find a sermon, summarize a passage, point you to a small group, or just listen. What's on your heart today?"),
     ),
   ];
 
-  static const _suggestions = [
-    'Find a sermon on grace',
-    'What does Romans 8 mean?',
-    'Help me find a small group',
-    'Prayer for anxiety',
+  late final List<_GraceMessage> _messages = _initialMessages;
+
+  List<String> get _suggestions => [
+    _cms.get('chat', 'suggestion.1', fallback: 'Find a sermon on grace'),
+    _cms.get('chat', 'suggestion.2', fallback: 'What does Romans 8 mean?'),
+    _cms.get('chat', 'suggestion.3', fallback: 'Help me find a small group'),
+    _cms.get('chat', 'suggestion.4', fallback: 'Prayer for anxiety'),
   ];
 
   void _send(String text) {
