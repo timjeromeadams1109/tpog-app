@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../services/content_service.dart';
+import '../../services/grace_api_service.dart';
 import '../../theme/app_colors.dart';
 
 class GraceScreen extends StatefulWidget {
@@ -15,45 +19,94 @@ class _GraceScreenState extends State<GraceScreen> {
 
   final _controller = TextEditingController();
   final _scrollCtrl = ScrollController();
+  bool _isStreaming = false;
+  StreamSubscription<GraceEvent>? _subscription;
 
   List<_GraceMessage> get _initialMessages => [
-    _GraceMessage(
-      fromUser: false,
-      body: _cms.get('chat', 'welcome',
-          fallback:
-              "Hi — I'm Grace, The Place of Grace's AI companion.\n\nI can help with scripture questions, find a sermon, summarize a passage, point you to a small group, or just listen. What's on your heart today?"),
-    ),
-  ];
+        _GraceMessage(
+          fromUser: false,
+          body: _cms.get('chat', 'welcome',
+              fallback:
+                  "Hi — I'm Grace, The Place of Grace's AI companion.\n\nI can help with scripture questions, find a sermon, summarize a passage, point you to a small group, or just listen. What's on your heart today?"),
+        ),
+      ];
 
   late final List<_GraceMessage> _messages = _initialMessages;
 
   List<String> get _suggestions => [
-    _cms.get('chat', 'suggestion.1', fallback: 'Find a sermon on grace'),
-    _cms.get('chat', 'suggestion.2', fallback: 'What does Romans 8 mean?'),
-    _cms.get('chat', 'suggestion.3', fallback: 'Help me find a small group'),
-    _cms.get('chat', 'suggestion.4', fallback: 'Prayer for anxiety'),
-  ];
+        _cms.get('chat', 'suggestion.1', fallback: 'Find a sermon on grace'),
+        _cms.get('chat', 'suggestion.2', fallback: 'What does Romans 8 mean?'),
+        _cms.get('chat', 'suggestion.3', fallback: 'Help me find a small group'),
+        _cms.get('chat', 'suggestion.4', fallback: 'Prayer for anxiety'),
+      ];
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _controller.dispose();
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
 
   void _send(String text) {
-    if (text.trim().isEmpty) return;
+    if (text.trim().isEmpty || _isStreaming) return;
+    final question = text.trim();
     setState(() {
-      _messages.add(_GraceMessage(fromUser: true, body: text.trim()));
+      _messages.add(_GraceMessage(fromUser: true, body: question));
       _controller.clear();
-      _messages.add(const _GraceMessage(fromUser: false, typing: true));
+      _messages.add(const _GraceMessage(fromUser: false, typing: true, body: ''));
+      _isStreaming = true;
     });
     _scrollToBottom();
 
-    Future.delayed(const Duration(milliseconds: 1400), () {
-      if (!mounted) return;
-      setState(() {
-        _messages.removeLast();
-        _messages.add(_GraceMessage(
-          fromUser: false,
-          body: _mockReply(text),
-        ));
-      });
-      _scrollToBottom();
-    });
+    String accumulated = '';
+    final api = GraceApiService.instance;
+
+    _subscription?.cancel();
+    _subscription = api.sendMessage(question).listen(
+      (event) {
+        if (!mounted) return;
+        switch (event.type) {
+          case GraceEventType.token:
+            accumulated += event.text ?? '';
+            setState(() {
+              _messages[_messages.length - 1] =
+                  _GraceMessage(fromUser: false, body: accumulated);
+            });
+            _scrollToBottom();
+          case GraceEventType.done:
+            setState(() => _isStreaming = false);
+          case GraceEventType.error:
+            setState(() {
+              _messages[_messages.length - 1] = _GraceMessage(
+                fromUser: false,
+                body: event.errorMessage ??
+                    'Something went wrong. Please try again.',
+                isError: true,
+              );
+              _isStreaming = false;
+            });
+          case GraceEventType.meta:
+          case GraceEventType.sources:
+            break;
+        }
+      },
+      onError: (e) {
+        if (!mounted) return;
+        setState(() {
+          _messages[_messages.length - 1] = const _GraceMessage(
+            fromUser: false,
+            body: 'Connection error. Please check your internet and try again.',
+            isError: true,
+          );
+          _isStreaming = false;
+        });
+      },
+      onDone: () {
+        if (!mounted) return;
+        setState(() => _isStreaming = false);
+      },
+    );
   }
 
   void _scrollToBottom() {
@@ -66,24 +119,6 @@ class _GraceScreenState extends State<GraceScreen> {
         );
       }
     });
-  }
-
-  String _mockReply(String q) {
-    final lower = q.toLowerCase();
-    if (lower.contains('sermon') || lower.contains('grace')) {
-      return 'Two recent sermons touch on grace directly:\n\n**Grace Greater Than** — Pastor Keith, 3 weeks ago, 38 min\n**No Condemnation** (Romans 8) — Pastor Keith, last Sunday, 42 min\n\nWant me to queue the first one in the Watch tab?';
-    }
-    if (lower.contains('romans 8')) {
-      return 'Romans 8 is often called the mountaintop of the New Testament.\n\nThe chapter moves in three movements:\n\n1. **No condemnation (vs 1–4)** — Paul declares the verdict first, before explaining the mechanism.\n2. **Life in the Spirit (vs 5–17)** — our identity shifts from slaves to sons.\n3. **Inseparable love (vs 31–39)** — nothing in all creation can separate us from the love of God.\n\nPastor Keith walked through vs 1–17 last Sunday. Want me to open those notes?';
-    }
-    if (lower.contains('small group') || lower.contains('group')) {
-      return 'There are 10 small groups meeting this season. Three that might fit:\n\n• **Mens Breakfast** — Saturdays 7am, led by David Chen\n• **Young Marrieds** — Thursdays 7pm, led by the Santos family\n• **Grief & Hope** — Tuesdays 6:30pm, by request\n\nWould you like me to send David a note that you\'re interested?';
-    }
-    if (lower.contains('anxiety') || lower.contains('anxious') ||
-        lower.contains('prayer')) {
-      return 'I hear you. You aren\'t alone in this.\n\nA prayer for you:\n\n> *Father, You know the weight of this moment. Quiet the noise. Remind us that Your peace is not absence of storm but Your presence within it. In Jesus\' name, amen.*\n\nIf it would help, I can also put in a confidential prayer request with the pastoral team. Just say the word.';
-    }
-    return 'I\'m here for whatever is on your mind. You can ask about a passage, look for a sermon or group, request prayer, or just think out loud.\n\nIf you\'d rather talk to a pastor, I can also connect you directly.';
   }
 
   @override
@@ -129,6 +164,19 @@ class _GraceScreenState extends State<GraceScreen> {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh_outlined),
+            tooltip: 'New conversation',
+            onPressed: _isStreaming
+                ? null
+                : () {
+                    GraceApiService.instance.resetConversation();
+                    setState(() {
+                      _messages.clear();
+                      _messages.addAll(_initialMessages);
+                    });
+                  },
+          ),
+          IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: () {},
           ),
@@ -144,7 +192,7 @@ class _GraceScreenState extends State<GraceScreen> {
               itemBuilder: (context, i) => _messageWidget(_messages[i]),
             ),
           ),
-          if (_messages.length <= 1) _suggestionsRow(),
+          if (_messages.length <= 1 && !_isStreaming) _suggestionsRow(),
           _composer(),
         ],
       ),
@@ -216,7 +264,7 @@ class _GraceScreenState extends State<GraceScreen> {
               ),
               child: m.typing
                   ? const _TypingDots()
-                  : _renderBody(m.body),
+                  : _renderBody(m.body, isError: m.isError),
             ),
           ),
         ],
@@ -224,21 +272,39 @@ class _GraceScreenState extends State<GraceScreen> {
     );
   }
 
-  Widget _renderBody(String body) {
-    final spans = <TextSpan>[];
-    final parts = body.split('**');
-    for (var i = 0; i < parts.length; i++) {
-      spans.add(TextSpan(
-        text: parts[i],
-        style: TextStyle(
-          fontWeight: i.isOdd ? FontWeight.w700 : FontWeight.w400,
+  Widget _renderBody(String body, {bool isError = false}) {
+    if (isError) {
+      return Text(
+        body,
+        style: const TextStyle(
+          color: Colors.red,
+          fontSize: 14,
+          height: 1.5,
+        ),
+      );
+    }
+    return MarkdownBody(
+      data: body,
+      styleSheet: MarkdownStyleSheet(
+        p: const TextStyle(
           color: AppColors.textPrimary,
           fontSize: 14,
           height: 1.5,
         ),
-      ));
-    }
-    return RichText(text: TextSpan(children: spans));
+        strong: const TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+        ),
+        blockquoteDecoration: BoxDecoration(
+          color: AppColors.surfaceAlt,
+          border: const Border(
+            left: BorderSide(color: AppColors.tpogBlue, width: 3),
+          ),
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+    );
   }
 
   Widget _suggestionsRow() {
@@ -290,15 +356,17 @@ class _GraceScreenState extends State<GraceScreen> {
                 hintText: 'Ask Grace anything…',
                 isDense: true,
               ),
-              onSubmitted: _send,
+              onSubmitted: _isStreaming ? null : _send,
             ),
           ),
           const SizedBox(width: 8),
           IconButton.filled(
             icon: const Icon(Icons.arrow_upward),
-            onPressed: () => _send(_controller.text),
+            onPressed: _isStreaming ? null : () => _send(_controller.text),
             style: IconButton.styleFrom(
-              backgroundColor: AppColors.tpogBlue,
+              backgroundColor: _isStreaming
+                  ? AppColors.tpogBlue.withValues(alpha: 0.5)
+                  : AppColors.tpogBlue,
             ),
           ),
         ],
@@ -311,10 +379,12 @@ class _GraceMessage {
   final bool fromUser;
   final String body;
   final bool typing;
+  final bool isError;
   const _GraceMessage({
     required this.fromUser,
     this.body = '',
     this.typing = false,
+    this.isError = false,
   });
 }
 
