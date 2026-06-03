@@ -21,7 +21,7 @@ class GraceApiService {
   GraceApiService._();
   static final GraceApiService instance = GraceApiService._();
 
-  static const _endpoint = 'https://tpog-web-mockup.vercel.app/api/grace/chat';
+  static const _endpoint = 'https://tpog-ai.vercel.app/api/grace/chat';
 
   String? _conversationId;
 

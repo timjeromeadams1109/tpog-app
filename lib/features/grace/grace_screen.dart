@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/content_service.dart';
 import '../../services/grace_api_service.dart';
@@ -272,6 +273,16 @@ class _GraceScreenState extends State<GraceScreen> {
     );
   }
 
+  static const _churchBaseUrl = 'https://theplaceofgrace.church';
+
+  Future<void> _openLink(String href) async {
+    final uri = Uri.tryParse(
+      href.startsWith('/') ? '$_churchBaseUrl$href' : href,
+    );
+    if (uri == null) return;
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
   Widget _renderBody(String body, {bool isError = false}) {
     if (isError) {
       return Text(
@@ -285,6 +296,9 @@ class _GraceScreenState extends State<GraceScreen> {
     }
     return MarkdownBody(
       data: body,
+      onTapLink: (text, href, title) {
+        if (href != null && href.isNotEmpty) _openLink(href);
+      },
       styleSheet: MarkdownStyleSheet(
         p: const TextStyle(
           color: AppColors.textPrimary,
@@ -295,6 +309,12 @@ class _GraceScreenState extends State<GraceScreen> {
           color: AppColors.textPrimary,
           fontSize: 14,
           fontWeight: FontWeight.w700,
+        ),
+        a: const TextStyle(
+          color: AppColors.tpogBlue,
+          fontSize: 14,
+          decoration: TextDecoration.underline,
+          decorationColor: AppColors.tpogBlue,
         ),
         blockquoteDecoration: BoxDecoration(
           color: AppColors.surfaceAlt,
@@ -412,7 +432,7 @@ class _TypingDotsState extends State<_TypingDots>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _c,
-      builder: (_, __) {
+      builder: (_, _) {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(3, (i) {

@@ -8,7 +8,7 @@ class ContentService {
   ContentService._();
   static final ContentService instance = ContentService._();
 
-  static const _baseUrl = 'https://tpog-web-mockup.vercel.app/api/content';
+  static const _baseUrl = 'https://tpog-ai.vercel.app/api/content';
 
   // scope → key → value
   final Map<String, Map<String, String>> _cache = {};

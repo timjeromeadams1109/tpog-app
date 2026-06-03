@@ -11,6 +11,15 @@ class WatchScreen extends StatelessWidget {
 
   static final _cms = ContentService.instance;
 
+  void _showComingSoon(BuildContext context, MockSermon s) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('"${s.title}" — video coming soon'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final sermons = MockData.sermons;
@@ -66,7 +75,7 @@ class WatchScreen extends StatelessWidget {
               ),
             ),
           ),
-          for (final s in rest) _row(s),
+          for (final s in rest) _row(context, s),
         ],
       ),
     );
@@ -78,7 +87,7 @@ class WatchScreen extends StatelessWidget {
       child: Card(
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () {},
+          onTap: () => _showComingSoon(context, s),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -162,7 +171,7 @@ class WatchScreen extends StatelessWidget {
     );
   }
 
-  Widget _row(MockSermon s) {
+  Widget _row(BuildContext context, MockSermon s) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       leading: ClipRRect(
@@ -186,7 +195,7 @@ class WatchScreen extends StatelessWidget {
         DateFormat('MMM d').format(s.date),
         style: const TextStyle(color: AppColors.textTertiary, fontSize: 11),
       ),
-      onTap: () {},
+      onTap: () => _showComingSoon(context, s),
     );
   }
 }

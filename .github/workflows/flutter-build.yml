@@ -1,0 +1,68 @@
+name: Flutter Web Build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: write   # required to commit build/web artifact back to the branch
+
+jobs:
+  build-web:
+    name: Build Flutter Web & commit artifact
+    runs-on: ubuntu-latest
+
+    # Skip if the commit was made by this workflow itself to avoid loops
+    if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'chore: build flutter web artifact')"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Need full history + write access so we can commit back
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Flutter 3.41.4 (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.41.4"
+          channel: "stable"
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web (release)
+        run: flutter build web --release --no-tree-shake-icons
+
+      - name: Verify build output exists
+        run: |
+          if [ ! -f build/web/index.html ]; then
+            echo "ERROR: build/web/index.html not found — build failed"
+            exit 1
+          fi
+          echo "build/web artifact verified ($(du -sh build/web | cut -f1))"
+
+      - name: Commit build/web artifact back to branch
+        # Only run on push events — PR events from the same repo will pick up
+        # the artifact from the push commit that triggered the PR check.
+        # On pull_request events from forks GITHUB_TOKEN never has write access.
+        if: github.event_name == 'push'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage only build/web — never stage anything else
+          git add -f build/web/
+
+          # If there's nothing new, skip the commit cleanly
+          if git diff --cached --quiet; then
+            echo "No changes to build/web — skipping commit"
+            exit 0
+          fi
+
+          git commit -m "chore: build flutter web artifact [skip ci]"
+          git push origin HEAD:${{ github.ref_name }}

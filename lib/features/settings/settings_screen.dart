@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
@@ -90,7 +91,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text(
                 _cms.get('settings', 'account.signout', fallback: 'Sign out'),
                 style: const TextStyle(color: AppColors.danger)),
-            onTap: () {},
+            onTap: () => context.go('/auth/login'),
           ),
           const SizedBox(height: 40),
         ],
