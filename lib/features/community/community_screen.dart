@@ -20,9 +20,25 @@ class _CommunityScreenState extends State<CommunityScreen> {
   final TextEditingController _composerController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
   void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
     _composerController.dispose();
     super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _onRefresh() async {
+    await ContentService.instance.load();
+    if (mounted) setState(() {});
   }
 
   @override
@@ -37,7 +53,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         label: Text(_cms.get('community', 'fab.label', fallback: 'Post')),
       ),
       body: RefreshIndicator(
-        onRefresh: () async => Future.delayed(const Duration(milliseconds: 600)),
+        onRefresh: _onRefresh,
         child: ListView.separated(
           padding: const EdgeInsets.symmetric(vertical: 8),
           itemCount: _posts.length,

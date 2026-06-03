@@ -5,10 +5,31 @@ import '../../data/mock/mock_data.dart';
 import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
 
+  @override
+  State<ScheduleScreen> createState() => _ScheduleScreenState();
+}
+
+class _ScheduleScreenState extends State<ScheduleScreen> {
   static final _cms = ContentService.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
+  void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
+    super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

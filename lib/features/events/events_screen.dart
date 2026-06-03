@@ -24,9 +24,20 @@ class _EventsScreenState extends State<EventsScreen>
   late final List<MockEvent> _events = List.of(MockData.events);
 
   @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
   void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
     _tabs.dispose();
     super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
   }
 
   List<MockEvent> _eventsOn(DateTime day) {
