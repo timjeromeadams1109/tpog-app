@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
@@ -11,7 +12,7 @@ class SocialMediaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final links = [
-      _Link(Icons.language, 'Website', 'placeofgrace.church'),
+      _Link(Icons.language, 'Website', 'theplaceofgrace.church', url: 'https://theplaceofgrace.church'),
       _Link(Icons.camera_alt_outlined, 'Instagram', '@tpog_church'),
       _Link(Icons.facebook, 'Facebook', 'The Place of Grace'),
       _Link(Icons.alternate_email, 'Twitter / X', '@tpog'),
@@ -52,7 +53,12 @@ class SocialMediaScreen extends StatelessWidget {
               ),
               trailing: const Icon(Icons.open_in_new,
                   size: 18, color: AppColors.textTertiary),
-              onTap: () {},
+              onTap: l.url != null
+                  ? () => launchUrl(
+                        Uri.parse(l.url!),
+                        mode: LaunchMode.externalApplication,
+                      )
+                  : null,
             ),
           );
         },
@@ -65,5 +71,6 @@ class _Link {
   final IconData icon;
   final String label;
   final String handle;
-  _Link(this.icon, this.label, this.handle);
+  final String? url;
+  _Link(this.icon, this.label, this.handle, {this.url});
 }
