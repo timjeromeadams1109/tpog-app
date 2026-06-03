@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: ["**"]
 
+permissions:
+  contents: write   # required to commit build/web artifact back to the branch
+
 jobs:
   build-web:
     name: Build Flutter Web & commit artifact
@@ -44,6 +47,10 @@ jobs:
           echo "build/web artifact verified ($(du -sh build/web | cut -f1))"
 
       - name: Commit build/web artifact back to branch
+        # Only run on push events — PR events from the same repo will pick up
+        # the artifact from the push commit that triggered the PR check.
+        # On pull_request events from forks GITHUB_TOKEN never has write access.
+        if: github.event_name == 'push'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -58,4 +65,4 @@ jobs:
           fi
 
           git commit -m "chore: build flutter web artifact [skip ci]"
-          git push origin HEAD
+          git push origin HEAD:${{ github.ref_name }}
