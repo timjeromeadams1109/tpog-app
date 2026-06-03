@@ -12,6 +12,7 @@ final ValueNotifier<bool> darkModeNotifier = ValueNotifier<bool>(false);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ContentService.instance.load();
+  ContentService.instance.startPolling();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

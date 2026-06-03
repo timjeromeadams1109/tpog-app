@@ -5,10 +5,31 @@ import '../../data/mock/mock_data.dart';
 import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
-class NotesScreen extends StatelessWidget {
+class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
 
+  @override
+  State<NotesScreen> createState() => _NotesScreenState();
+}
+
+class _NotesScreenState extends State<NotesScreen> {
   static final _cms = ContentService.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
+  void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
+    super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

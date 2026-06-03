@@ -21,6 +21,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool get _darkMode => darkModeNotifier.value;
 
   @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
+  void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
+    super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(_cms.get('settings', 'header.title', fallback: 'Settings'))),

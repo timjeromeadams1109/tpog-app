@@ -6,8 +6,31 @@ import '../../services/content_service.dart';
 import '../../shared/widgets/avatar.dart';
 import '../../theme/app_colors.dart';
 
-class MoreScreen extends StatelessWidget {
+class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
+
+  @override
+  State<MoreScreen> createState() => _MoreScreenState();
+}
+
+class _MoreScreenState extends State<MoreScreen> {
+  static final _cms = ContentService.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
+  void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
+    super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

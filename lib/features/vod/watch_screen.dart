@@ -6,10 +6,31 @@ import '../../data/mock/mock_data.dart';
 import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
-class WatchScreen extends StatelessWidget {
+class WatchScreen extends StatefulWidget {
   const WatchScreen({super.key});
 
+  @override
+  State<WatchScreen> createState() => _WatchScreenState();
+}
+
+class _WatchScreenState extends State<WatchScreen> {
   static final _cms = ContentService.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
+  void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
+    super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
+  }
 
   void _showComingSoon(BuildContext context, MockSermon s) {
     ScaffoldMessenger.of(context).showSnackBar(

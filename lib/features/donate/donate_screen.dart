@@ -21,6 +21,22 @@ class _DonateScreenState extends State<DonateScreen> {
   static const _frequencies = ['One time', 'Weekly', 'Monthly', 'Yearly'];
 
   @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
+  void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
+    super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(_cms.get('give', 'header.title', fallback: 'Give'))),

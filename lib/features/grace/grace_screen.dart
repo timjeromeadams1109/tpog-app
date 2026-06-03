@@ -42,11 +42,22 @@ class _GraceScreenState extends State<GraceScreen> {
       ];
 
   @override
+  void initState() {
+    super.initState();
+    _cms.contentVersion.addListener(_onCmsUpdate);
+  }
+
+  @override
   void dispose() {
+    _cms.contentVersion.removeListener(_onCmsUpdate);
     _subscription?.cancel();
     _controller.dispose();
     _scrollCtrl.dispose();
     super.dispose();
+  }
+
+  void _onCmsUpdate() {
+    if (mounted) setState(() {});
   }
 
   void _send(String text) {
