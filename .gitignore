@@ -30,7 +30,16 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+# Ignore all platform build outputs EXCEPT build/web (Vercel needs that artifact)
+# Note: git cannot negate a directory that's already fully ignored, so we enumerate
+# the subdirs we want blocked rather than using a blanket /build/ exclusion.
+/build/android/
+/build/ios/
+/build/linux/
+/build/macos/
+/build/windows/
+/build/app/
+/build/*.symbols
 /coverage/
 
 # Symbolication related
