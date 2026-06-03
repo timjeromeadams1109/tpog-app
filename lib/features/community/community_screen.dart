@@ -17,6 +17,13 @@ class CommunityScreen extends StatefulWidget {
 class _CommunityScreenState extends State<CommunityScreen> {
   static final _cms = ContentService.instance;
   late final List<MockPost> _posts = List.of(MockData.posts);
+  final TextEditingController _composerController = TextEditingController();
+
+  @override
+  void dispose() {
+    _composerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,6 +171,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   void _openComposer() {
+    // Clear any previous draft before opening.
+    _composerController.clear();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -171,9 +181,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) => Padding(
+      builder: (modalContext) => Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+          bottom: MediaQuery.of(modalContext).viewInsets.bottom,
           left: 20,
           right: 20,
           top: 24,
@@ -188,6 +198,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
             const SizedBox(height: 16),
             TextField(
+              controller: _composerController,
               maxLines: 5,
               decoration: InputDecoration(
                 hintText: _cms.get('community', 'composer.hint', fallback: 'Share with the community…'),
@@ -209,7 +220,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 const Spacer(),
                 FilledButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    final text = _composerController.text.trim();
+                    Navigator.pop(modalContext);
+                    if (text.isNotEmpty) {
+                      setState(() {
+                        _posts.insert(
+                          0,
+                          MockPost(
+                            id: 'p_${DateTime.now().millisecondsSinceEpoch}',
+                            author: MockData.me,
+                            body: text,
+                            postedAt: DateTime.now(),
+                          ),
+                        );
+                      });
+                      _composerController.clear();
+                    }
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(_cms.get('community', 'snackbar.post', fallback: 'Posted to the community'))),
                     );

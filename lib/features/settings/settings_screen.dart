@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../main.dart' show darkModeNotifier;
 import '../../services/content_service.dart';
 import '../../theme/app_colors.dart';
 
@@ -17,7 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _pushEvents = true;
   bool _pushMessages = true;
   bool _pushCommunity = false;
-  bool _darkMode = true;
+  bool get _darkMode => darkModeNotifier.value;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SwitchListTile(
             value: _darkMode,
             activeColor: AppColors.tpogBlue,
-            onChanged: (v) => setState(() => _darkMode = v),
+            onChanged: (v) => setState(() => darkModeNotifier.value = v),
             title: Text(_cms.get('settings', 'appearance.dark.title', fallback: 'Dark mode')),
           ),
           _sectionTitle(_cms.get('settings', 'section.account', fallback: 'ACCOUNT')),
