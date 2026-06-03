@@ -13,6 +13,7 @@ class RequestsScreen extends StatefulWidget {
 
 class _RequestsScreenState extends State<RequestsScreen> {
   static final _cms = ContentService.instance;
+  bool _anonymous = false;
   final _requests = <_Req>[
     _Req('Sarah Mitchell',
         'Praying for wisdom as we look for a new home for my mother. The stress has been heavy.',
@@ -119,6 +120,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
   }
 
   void _openNewRequest() {
+    // Reset anonymous toggle each time the sheet opens.
+    _anonymous = false;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -126,54 +129,60 @@ class _RequestsScreenState extends State<RequestsScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-          left: 20,
-          right: 20,
-          top: 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              _cms.get('prayer', 'form.title', fallback: 'Prayer request'),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              maxLines: 4,
-              decoration: InputDecoration(
-                hintText: _cms.get('prayer', 'form.hint', fallback: 'How can we pray for you?'),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+            left: 20,
+            right: 20,
+            top: 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                _cms.get('prayer', 'form.title', fallback: 'Prayer request'),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(Icons.visibility_off_outlined,
-                    size: 16, color: AppColors.textSecondary),
-                const SizedBox(width: 8),
-                Text(
-                  _cms.get('prayer', 'anonymous.label', fallback: 'Post anonymously'),
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              const SizedBox(height: 16),
+              TextField(
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: _cms.get('prayer', 'form.hint', fallback: 'How can we pray for you?'),
                 ),
-                Spacer(),
-                Switch(value: false, onChanged: null),
-              ],
-            ),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(_cms.get('prayer', 'snackbar.submit', fallback: 'Shared with the prayer team'))),
-                );
-              },
-              child: Text(_cms.get('prayer', 'submit.label', fallback: 'Submit request')),
-            ),
-          ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Icon(Icons.visibility_off_outlined,
+                      size: 16, color: AppColors.textSecondary),
+                  const SizedBox(width: 8),
+                  Text(
+                    _cms.get('prayer', 'anonymous.label', fallback: 'Post anonymously'),
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                  ),
+                  const Spacer(),
+                  Switch(
+                    value: _anonymous,
+                    activeColor: AppColors.tpogBlue,
+                    onChanged: (v) => setSheetState(() => _anonymous = v),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(_cms.get('prayer', 'snackbar.submit', fallback: 'Shared with the prayer team'))),
+                  );
+                },
+                child: Text(_cms.get('prayer', 'submit.label', fallback: 'Submit request')),
+              ),
+            ],
+          ),
         ),
       ),
     );
