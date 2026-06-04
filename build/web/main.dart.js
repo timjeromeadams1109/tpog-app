@@ -106296,7 +106296,7 @@ return s==null?c:s},
 w3(){var s=0,r=A.N(t.y),q,p=2,o=[],n=this,m,l,k,j,i,h,g,f,e,d,c,b,a
 var $async$w3=A.J(function(a0,a1){if(a0===1){o.push(a1)
 s=p}for(;;)switch(s){case 0:p=4
-m=A.dq("https://tpog-ai.vercel.app/api/content",0,null)
+m=A.dq("https://tpog-app-backend-8tljffr2o-tim-adams-projects-6c46d12d.vercel.app/api/content",0,null)
 s=7
 return A.I(A.beh(m).P2(B.Jp),$async$w3)
 case 7:l=a1
