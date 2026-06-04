@@ -18,7 +18,7 @@ class ContentService {
   ContentService._();
   static final ContentService instance = ContentService._();
 
-  static const _baseUrl = 'https://tpog-ai.vercel.app/api/content';
+  static const _baseUrl = 'https://tpog-app-backend-8tljffr2o-tim-adams-projects-6c46d12d.vercel.app/api/content';
 
   /// Default poll cadence. 10 s keeps demo changes visible almost instantly.
   static const Duration pollInterval = Duration(seconds: 10);
